@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CreateEnvironmentDto } from './dto/create-environment.dto';
 import { UpdateEnvironmentDto } from './dto/update-environment.dto';
 import { EnviromentDocument, Environment } from './entities/environment.entity';
 import { InjectModel } from '@nestjs/mongoose';
@@ -12,8 +11,8 @@ export class EnvironmentsService {
     private environmentModel: Model<EnviromentDocument>,
   ) {}
 
-  create(createEnvironmentDto: CreateEnvironmentDto) {
-    return 'This action adds a new enviroment';
+  create(createEnvironmentDto: any) {
+    return this.environmentModel.create(createEnvironmentDto);
   }
 
   findAll() {
