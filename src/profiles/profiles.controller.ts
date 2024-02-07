@@ -9,7 +9,9 @@ import {
 import { ProfilesService } from './profiles.service';
 import { EnvironmentsService } from 'src/enviroments/environments.service';
 import { TOTPGenerator } from 'src/utils/totp-generator.utils';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('profile')
 @Controller('profiles')
 export class ProfilesController {
   constructor(
@@ -17,6 +19,15 @@ export class ProfilesController {
     private readonly environmentsService: EnvironmentsService,
   ) {}
 
+  @ApiOperation({
+    summary: 'Consultar o perfil em todos os ambientes.',
+    description:
+      'Este endpoint permite consultar o perfil em todos os ambientes e informa se o perfil está cadastrado ou não. Caso esteja cadastrado, também informa se está ativo ou não.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista o perfil em todos os ambientes do OCC.',
+  })
   @Get('/findAll')
   async findAll(@Query('email') email: string) {
     try {
@@ -64,7 +75,6 @@ export class ProfilesController {
 
       return profileArray;
     } catch (error) {
-      console.log(error);
       throw new HttpException(
         {
           message: `${error.message} - ${error.config.url}`,
@@ -75,6 +85,15 @@ export class ProfilesController {
     }
   }
 
+  @ApiOperation({
+    summary: 'Verificar e atualizar o acesso do perfil em todos os ambientes.',
+    description:
+      'Este endpoint verifica se o perfil existe em todos os ambientes. Se o perfil existir, ele verifica se está ativo ou não. Se estiver ativo, desativa o acesso do perfil ao ambiente.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Atualizar o perfil em todos os ambientes.',
+  })
   @Put('/updateAll')
   async update(@Query('email') email: string) {
     try {
@@ -155,10 +174,10 @@ export class ProfilesController {
 
       return profileArray;
     } catch (error) {
-      console.log(error);
       throw new HttpException(
         {
-          message: `${error.message}`,
+          message: `${error.message} - ${error.config.url}`,
+          status: error.response.status,
         },
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
