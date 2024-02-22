@@ -1,15 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
-import { ConfigService } from '@nestjs/config';
 import { stringify } from 'qs';
 
 @Injectable()
 export class ProfilesService {
-  constructor(
-    private readonly httpService: HttpService,
-    private readonly configService: ConfigService,
-  ) {}
+  constructor(private readonly httpService: HttpService) {}
 
   async getLoginToken(environment: string, appKey: string) {
     const response = await lastValueFrom(
